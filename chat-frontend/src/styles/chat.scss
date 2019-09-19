@@ -1,0 +1,125 @@
+input {
+  border: 1px solid #eeeeee;
+  margin: 0 0 0 6px;
+  padding: 12px;
+  outline: none;
+}
+
+input.message {
+  width: 400px;
+}
+
+button {
+  cursor: pointer;
+  padding: 12px;
+  background: #000;
+  border: none;
+  color: white;
+  font-size: 16px;
+  transition: background 0.3s ease;
+  margin-left: 10px;
+}
+
+button:hover {
+  background: #6b47b8;
+}
+
+button:disabled {
+  cursor: default;
+  background: #7c5cbf94;
+}
+
+button.logout {
+  margin-left: 60px;
+}
+
+.chat {
+  display: flex;
+}
+
+.chat__sidebar {
+  display: flex;
+  flex-direction: column;
+}
+
+.chat__sidebar_room {
+  height: 85vh;
+  color: white;
+  background: #333744;
+  width: 225px;
+  float: left;
+}
+
+.chat__sidebar_rooms {
+  height: 15vh;
+  color: white;
+  background: #333744;
+  width: 225px;
+}
+
+.chat__main {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  max-height: 100vh;
+}
+
+.chat__messages {
+  flex-grow: 1;
+  padding: 24px 24px 0 24px;
+  overflow-y: scroll;
+}
+
+.message {
+  margin-bottom: 16px;
+}
+
+.message__name {
+  font-weight: 600;
+  font-size: 14px;
+  margin-right: 8px;
+}
+
+.message__meta {
+  color: #777;
+  font-size: 14px;
+}
+
+.message a {
+  color: #0070cc;
+}
+
+.room-title {
+  font-weight: 400;
+  font-size: 22px;
+  background: #2c2f3a;
+  padding: 12px 24px 12px 12px;
+}
+
+.rooms-title {
+  font-weight: 200;
+  font-size: 20px;
+  background: #2c2f3a;
+  padding: 12px 24px 12px 12px;
+}
+
+.youtube-width {
+  max-width: 1000px;
+  min-width: 200px;
+}
+
+.video-responsive {
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 56.25%; /* 16:9 */
+  position: relative;
+  height: 0;
+}
+
+.video-responsive iframe {
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}

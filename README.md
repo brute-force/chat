@@ -1,6 +1,6 @@
 # chat
 
-This is a rewrite of [chat-server](https://github.com/brute-force/chat-server). The front end now uses [Vue.js](https://github.com/vuejs/vue) and now handles authentication. The back end now only serves  express and socketio.  
+This is a rewrite of [chat-server](https://github.com/brute-force/chat-server). The front end uses [Vue.js](https://github.com/vuejs/vue) and handles authentication. The back end serves express and socketio.  
 
 Are you tired of your friends never looking at the videos you send them in chat? Do they say "I'll look later!" or "I'll bookmark this?" And then when you talk about the videos you can tell they've never seen them? Or have they just started saying "I'm never clicking this?"  
   

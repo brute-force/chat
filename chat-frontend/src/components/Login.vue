@@ -34,28 +34,6 @@ export default {
 }
 </script>
 
-<style scoped>
-.log-in {
-  background-color: #333333;
-  padding: 24px;
-  height: 100vh;
-}
-
-.room {
-  background: #333;
-  color: white;
-  height: 40px;
-  vertical-align: middle;
-  padding: 12px;
-  outline: none;
-}
-
-.g-signin-button {
-  cursor: pointer;
-  display: inline-block;
-  margin-left: 20px;
-  vertical-align: middle;
-  height: 46px;
-  width: 191px;
-}
+<style lang="scss" scoped>
+@import '@/styles/login.scss';
 </style>

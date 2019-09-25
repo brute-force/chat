@@ -2,7 +2,6 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Login from '@/components/Login';
 import Chat from '@/components/Chat';
-import NotFound from '@/components/NotFound';
 import store from './vuex-store';
 import VueSocketIO from 'vue-socket.io';
 import SocketIO from 'socket.io-client';
@@ -27,10 +26,6 @@ Vue.use(Router);
 const router = new Router({
   mode: 'history',
   routes: [
-    {
-      path: '*',
-      component: NotFound
-    },
     {
       path: '/',
       name: 'login',

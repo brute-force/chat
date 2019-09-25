@@ -68,4 +68,8 @@ app.get('/getAll', (req, res) => {
   res.json(response);
 });
 
+app.use((req, res, next) => {
+  res.status(404).send('oops! that\'s a 404, y\'all.');
+});
+
 module.exports = server;

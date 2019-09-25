@@ -1,0 +1,24 @@
+.chat__messages {
+  flex-grow: 1;
+  padding: 24px 24px 0 24px;
+  overflow-y: scroll;
+}
+
+.message {
+  margin-bottom: 16px;
+}
+
+.message a {
+  color: #0070cc;
+}
+
+.message__name {
+  font-weight: 600;
+  font-size: 14px;
+  margin-right: 8px;
+}
+
+.message__meta {
+  color: #777;
+  font-size: 14px;
+}

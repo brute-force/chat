@@ -3,3 +3,10 @@
   font-weight: 100;
   padding: 12px 24px 0 24px;
 }
+
+/*
+  mark current rooom if there is more than one in list
+*/
+li:first-child:not(:only-child) {
+  list-style-type: disc;
+}

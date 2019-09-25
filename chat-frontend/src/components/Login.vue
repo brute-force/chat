@@ -16,7 +16,7 @@ export default {
         prompt: 'consent',
         scope: 'email profile openid'
       }
-    }
+    };
   },
   methods: {
     onSignInSuccess (googleUser) {
@@ -31,7 +31,7 @@ export default {
       console.log('error signing in:', error);
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

@@ -13,9 +13,9 @@ export default {
   props: {
     users: Array
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/users.scss';
+@import "@/styles/users.scss";
 </style>

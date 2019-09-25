@@ -119,10 +119,10 @@ module.exports = (io) => {
     });
 
     // remove user on disonnect
-    socket.on('disconnect', async () => {
+    socket.on('disconnect', async (reason) => {
       try {
         const user = await leaveRoom(socket);
-        console.log(`${user.username} ${socket.id} disconnected.`);
+        console.log(`${user.username} ${socket.id} disconnected. ${reason}`);
       } catch (err) {
         console.log(`error disconnecting ${socket.id}: ${err.message}`);
       }

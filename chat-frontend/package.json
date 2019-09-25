@@ -5,7 +5,6 @@
   "scripts": {
     "serve": "nodemon --exec 'vue-cli-service serve'",
     "build": "vue-cli-service build && cp -rXv dist ../chat-backend/",
-    "build-dev-dist": "vue-cli-service build --mode development && cp -rXv dist ../chat-backend/",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -28,6 +27,7 @@
     "@vue/cli-plugin-babel": "^3.11.0",
     "@vue/cli-plugin-eslint": "^3.11.0",
     "@vue/cli-service": "^3.11.0",
+    "@vue/eslint-config-standard": "^4.0.0",
     "babel-eslint": "^10.0.1",
     "eslint": "^5.16.0",
     "eslint-config-semistandard": "^15.0.0",

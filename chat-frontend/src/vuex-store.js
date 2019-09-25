@@ -1,16 +1,15 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import jwt from 'jsonwebtoken';
-import createPersistedState from 'vuex-persistedstate';
+import Cookies from 'js-cookie';
 // import request from 'superagent';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  plugins: [createPersistedState()],
   state: {
-    token: window.localStorage.getItem('token') || '',
-    user: {}
+    token: Cookies.get('token') || '',
+    user: JSON.parse(Cookies.get('user') || '{}')
   },
   mutations: {
     login (state, { token, user }) {
@@ -28,16 +27,23 @@ export default new Vuex.Store({
   actions: {
     login ({ commit }, user) {
       const token = jwt.sign(user, process.env.VUE_APP_JWT_SECRET, { expiresIn: '1d' });
-      window.localStorage.setItem('token', token);
-      // request.defaults.headers.common.Authorization = token;
+
+      // set secure to true when deploying to an https environment
+      // const opts = { expires: 1, samesite: 'Strict', secure: true };
+      const opts = { expires: 1, samesite: 'Strict' };
+
+      Cookies.set('token', token, opts);
+      Cookies.set('user', JSON.stringify(user), opts);
+
       commit('login', { token, user });
 
       return Promise.resolve(token);
     },
     logout ({ commit }) {
-      window.localStorage.removeItem('token');
+      Cookies.remove('token');
+      Cookies.remove('user');
+
       commit('logout');
-      // delete request.defaults.headers.common.Authorization;
 
       return Promise.resolve('logged out');
     },

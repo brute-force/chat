@@ -1,10 +1,11 @@
 const express = require('express');
 const http = require('http');
+const history = require('connect-history-api-fallback');
 const socketio = require('socket.io');
 const path = require('path');
 const session = require('express-session');
 const MemoryStore = require('memorystore')(session);
-const { getUser } = require('./utils/users');
+const { getUser, getUsers } = require('./utils/users');
 
 // set up server and socketio
 const app = express();
@@ -34,6 +35,8 @@ require('./sockets')(io);
 const pathDist = path.join(__dirname, '../dist');
 app.use(express.static(pathDist));
 
+app.use(history());
+
 // get all the rooms and users
 app.get('/getAll', (req, res) => {
   const original = io.sockets.adapter.rooms;
@@ -55,7 +58,14 @@ app.get('/getAll', (req, res) => {
     rooms.push(room);
   });
 
-  res.json(rooms);
+  const users = getUsers();
+
+  const response = {
+    rooms,
+    users
+  };
+
+  res.json(response);
 });
 
 module.exports = server;

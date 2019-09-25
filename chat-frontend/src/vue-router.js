@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Login from '@/components/Login';
 import Chat from '@/components/Chat';
+import NotFound from '@/components/NotFound';
 import store from './vuex-store';
 import VueSocketIO from 'vue-socket.io';
 import SocketIO from 'socket.io-client';
@@ -17,14 +18,19 @@ Router.prototype.push = function push (location, onResolve, onReject) {
     // swallow console errors when navigation aborts
     return originalPush.call(this, location).catch((err) => err);
   } catch (error) {
-    console.log(error);
+    console.warn(error);
   }
 };
 
 Vue.use(Router);
 
 const router = new Router({
+  mode: 'history',
   routes: [
+    {
+      path: '*',
+      component: NotFound
+    },
     {
       path: '/',
       name: 'login',

@@ -1,3 +1,7 @@
+.message-form {
+  margin-bottom: 16px;
+}
+
 input {
   border: 1px solid #eeeeee;
   margin: 0 0 0 6px;
@@ -62,31 +66,6 @@ button.logout {
   display: flex;
   flex-direction: column;
   max-height: 100vh;
-}
-
-.chat__messages {
-  flex-grow: 1;
-  padding: 24px 24px 0 24px;
-  overflow-y: scroll;
-}
-
-.message {
-  margin-bottom: 16px;
-}
-
-.message__name {
-  font-weight: 600;
-  font-size: 14px;
-  margin-right: 8px;
-}
-
-.message__meta {
-  color: #777;
-  font-size: 14px;
-}
-
-.message a {
-  color: #0070cc;
 }
 
 .room-title {

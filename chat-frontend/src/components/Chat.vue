@@ -2,48 +2,26 @@
   <div class="chat">
     <div id="sidebar" class="chat__sidebar">
       <div class="chat__sidebar_room">
-        <h2 class="room-title">{{ room }}</h2>
-        <Users :users="users"></Users>
+        <h2 class="room-title">{{ user.room }}</h2>
+        <Users :users="users" />
       </div>
       <div class="chat__sidebar_rooms">
         <h2 class="rooms-title">rooms</h2>
-        <Rooms :rooms="rooms" :room="room" v-on:join="join"></Rooms>
+        <Rooms :rooms="rooms" :room="user.room" v-on:join="join" />
       </div>
     </div>
     <div class="chat__main">
       <div class="youtube-width">
         <div class="video-responsive">
-          <iframe
-            ref="ahem"
-            id="ahem"
-            frameborder="0"
-            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-          ></iframe>
+          <iframe ref="ahem" id="ahem" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
       </div>
-      <div id="messages" class="chat__messages" ref="messages">
-        <div class="message" v-for="message in messages" v-bind:key="message.id">
-          <p>
-            <span class="message__name" v-html="message.username"></span>
-            <span class="message__meta">{{ message.createdAt }}</span>
-          </p>
-          <p v-html="message.message"></p>
-        </div>
-      </div>
-      <form class="form">
-        <input
-          type="text"
-          name="message"
-          class="message"
-          placeholder="message"
-          autocomplete="off"
-          v-model="message"
-          ref="message"
-        />
-        <button class="send" @click="sendMessage">send</button>
-        <button class="location" @click="sendLocation">send location</button>
-        <button class="logout" @click="logout">log out</button>
+      <Messages :messages="messages" />
+      <form class="message-form">
+        <input type="text" name="message" class="message" placeholder="message" autocomplete="off" v-model="message" ref="message" />
+        <button class="send" @click.prevent="sendMessage">send</button>
+        <button class="location" @click.prevent="sendLocation">send location</button>
+        <button class="logout" @click.prevent="logout">log out</button>
       </form>
     </div>
   </div>
@@ -54,6 +32,7 @@ import { mapActions } from 'vuex';
 import moment from 'moment';
 import Users from '@/components/Users.vue';
 import Rooms from '@/components/Rooms.vue';
+import Messages from '@/components/Messages.vue';
 import debounce from 'lodash.debounce';
 
 const timestampFormat = 'h:mm:ss a';
@@ -61,7 +40,8 @@ const timestampFormat = 'h:mm:ss a';
 export default {
   components: {
     Users,
-    Rooms
+    Rooms,
+    Messages
   },
   data () {
     return {
@@ -72,15 +52,16 @@ export default {
         room: ''
       },
       users: [],
-      room: '',
       rooms: [],
       messages: [],
       message: ''
     };
   },
   beforeDestroy () {
-    // disconnect before reload so we don't have an orphaned user in the room
-    this.$socket.disconnect();
+    // disconnect before reload/logout so we don't have an orphaned user in the room
+    if (this.isConnected) {
+      this.$socket.disconnect();
+    }
   },
   sockets: {
     connect () {
@@ -93,12 +74,14 @@ export default {
     },
     // update room user list
     roomData ({ room, users }) {
-      this.room = room;
+      this.updateRoom(room);
+      this.user.room = room;
       this.users = users;
     },
     // update rooms list
     worldData ({ rooms }) {
-      this.rooms = rooms.filter((el) => el !== this.room);
+      // this.rooms = rooms.filter((el) => el !== this.user.room);
+      this.rooms = rooms;
     },
     // auto-play the youtube
     youtube ({ username, message, createdAt }) {
@@ -129,8 +112,7 @@ export default {
       });
     },
     // tell user [insert third person singular subjective pronoun here] got kicked
-    kicked (kicker, yourNewRoom) {
-      this.updateRoom(yourNewRoom);
+    kicked (kicker) {
       window.alert(`${kicker.username} kicked you. (${kicker.email})`);
     }
   },
@@ -168,13 +150,13 @@ export default {
   },
   methods: {
     join (room, username, email) {
-      if (this.room === room) {
+      if (this.user.room === room && !username) {
         window.alert(`your [sic] already in ${room}.`);
       } else {
         this.$socket.emit('join', { room, username, email }, (err, user) => {
           if (err) {
             window.alert(err.message);
-            this.logout();
+            return this.logout();
           }
 
           this.updateRoom(room);
@@ -183,8 +165,6 @@ export default {
       }
     },
     sendMessage (e) {
-      e.preventDefault();
-
       if (this.message.trim().length === 0) {
         window.alert('enter a message');
         return this.$refs.message.focus();
@@ -202,12 +182,12 @@ export default {
               window.alert(err.message);
 
               if (err.name === 'UserNotFoundError') {
-                this.logout();
+                return this.logout();
               }
             }
           });
         } else {
-          window.alert(`${username} not found in ${this.room}.`)
+          window.alert(`${username} not found in ${this.user.room}.`);
         }
       } else if (/^\/join /.test(this.message)) {
         // join a new room
@@ -220,7 +200,7 @@ export default {
             window.alert(err.message);
 
             if (err.name === 'UserNotFoundError') {
-              this.logout();
+              return this.logout();
             }
           }
         });
@@ -232,10 +212,8 @@ export default {
       this.$refs.message.focus();
     },
     sendLocation (e) {
-      e.preventDefault();
-
       if (!window.navigator.geolocation) {
-        return window.alert('geolocation not supported on your browser.')
+        return window.alert('geolocation not supported on your browser.');
       }
 
       e.target.setAttribute('disabled', 'disabled');
@@ -248,7 +226,7 @@ export default {
             window.alert(err.message);
 
             if (err.name === 'UserNotFoundError') {
-              this.logout();
+              return this.logout();
             }
           }
 
@@ -258,12 +236,7 @@ export default {
       });
     },
     logout (e, msg) {
-      // we can call this outside of a click handler
-      if (e) {
-        e.preventDefault();
-      }
-
-      // log out in vuex store then disconnect and redirect to login
+      // log out in vuex store then redirect to login
       this.$store.dispatch('logout')
         .then(() => {
           this.$router.push({ name: 'login' })
@@ -273,11 +246,10 @@ export default {
               }
 
               console.log(`logged out ${this.user.username}.`);
-
-              this.$socket.disconnect();
+              // this.$socket.disconnect();
             })
             .catch((err) => {
-              // console.log(`navigation error: ${err.message}`);
+              console.warn(`navigation error: ${err.message}`);
             });
         });
     },
@@ -292,14 +264,10 @@ export default {
     this.join(room, username, email);
 
     this.$refs.message.focus();
-  },
-  updated () {
-    // auto-scroll the message list on update
-    this.$nextTick(() => this.$refs.messages.scrollTop = this.$refs.messages.lastElementChild.offsetTop);
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/chat.scss';
+@import "@/styles/chat.scss";
 </style>

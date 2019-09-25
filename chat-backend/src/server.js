@@ -31,11 +31,11 @@ io.use((socket, next) => {
 
 require('./sockets')(io);
 
+app.use(history());
+
 // mount static files
 const pathDist = path.join(__dirname, '../dist');
 app.use(express.static(pathDist));
-
-app.use(history());
 
 // get all the rooms and users
 app.get('/getAll', (req, res) => {

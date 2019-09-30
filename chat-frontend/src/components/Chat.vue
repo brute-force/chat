@@ -21,7 +21,7 @@
         <input type="text" name="message" class="message" placeholder="message" autocomplete="off" v-model="message" ref="message" />
         <button class="send" @click.prevent="sendMessage">send</button>
         <button class="location" @click.prevent="sendLocation">send location</button>
-        <button class="logout" @click.prevent="logout">log out</button>
+        <button class="logout" @click.prevent="doLogout">log out</button>
       </form>
     </div>
   </div>
@@ -125,7 +125,7 @@ export default {
             window.alert(err.message);
 
             if (err.name === 'UserNotFoundError') {
-              this.logout();
+              this.doLogout();
             }
           }
         });
@@ -137,7 +137,7 @@ export default {
             window.alert(err.message);
 
             if (err.name === 'UserNotFoundError') {
-              this.logout();
+              this.doLogout();
             }
 
             return;
@@ -156,10 +156,10 @@ export default {
         this.$socket.emit('join', { room, username, email }, (err, user) => {
           if (err) {
             window.alert(err.message);
-            return this.logout();
+            return this.doLogout();
           }
 
-          this.updateRoom(room);
+          // this.updateRoom(room);
           console.log(`${user.username} joined ${room}.`);
         });
       }
@@ -182,7 +182,7 @@ export default {
               window.alert(err.message);
 
               if (err.name === 'UserNotFoundError') {
-                return this.logout();
+                return this.doLogout();
               }
             }
           });
@@ -200,7 +200,7 @@ export default {
             window.alert(err.message);
 
             if (err.name === 'UserNotFoundError') {
-              return this.logout();
+              return this.doLogout();
             }
           }
         });
@@ -226,7 +226,7 @@ export default {
             window.alert(err.message);
 
             if (err.name === 'UserNotFoundError') {
-              return this.logout();
+              return this.doLogout();
             }
           }
 
@@ -235,9 +235,9 @@ export default {
         });
       });
     },
-    logout (e, msg) {
+    doLogout (e, msg) {
       // log out in vuex store then redirect to login
-      this.$store.dispatch('logout')
+      this.logout()
         .then(() => {
           this.$router.push({ name: 'login' })
             .then(() => {
@@ -253,7 +253,7 @@ export default {
             });
         });
     },
-    ...mapActions({ updateRoom: 'updateRoom' })
+    ...mapActions({ updateRoom: 'updateRoom', logout: 'logout' })
   },
   mounted () {
     // initial room join

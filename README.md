@@ -5,6 +5,8 @@ Are you tired of your friends never looking at the videos you send them in chat?
 Here's a chat server that parses YouTube links and automatically plays the videos right on their chat page! Now they'll have to watch your videos -- at least until they close the browser tab.  
   
 This is a rewrite of [chat-server](https://github.com/brute-force/chat-server). The front end uses [Vue.js](https://github.com/vuejs/vue) and handles authentication. The back end serves express and socketio.  
+
+deployed app on AWS Elastic Beanstalk: [http://shall-we.us-east-1.elasticbeanstalk.com/](http://shall-we.us-east-1.elasticbeanstalk.com/)
   
 ## Front end setup
 ```
